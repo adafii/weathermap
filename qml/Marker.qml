@@ -15,8 +15,9 @@ MapQuickItem {
 
         Text {
             id: markerText
+
             anchors.left: markerImage.right
-            text: (marker.coordinate.latitude).toFixed(2) + '\n' + (marker.coordinate.longitude).toFixed(2)
+            text: ""
         }
         Image {
             id: markerImage
@@ -29,6 +30,36 @@ MapQuickItem {
         }
     }
 
+    GeocodeModel {
+        id: geocodeModel
+
+        autoUpdate: false
+        plugin: map.plugin
+
+        Component.onCompleted: {
+            query = marker.coordinate;
+            update();
+        }
+        onStatusChanged: {
+            switch (status) {
+            case GeocodeModel.Ready:
+                const address = get(0).address;
+                if (address.city) {
+                    markerText.text = address.city + ', ' + address.country;
+                } else if (address.country) {
+                    markerText.text = address.country;
+                } else {
+                    markerText.text = "Unknown";
+                }
+                break;
+            case GeocodeModel.Loading:
+                markerText.text = "Fetching";
+                break;
+            default:
+                markerText.text = "Unknown";
+            }
+        }
+    }
     DragHandler {
         id: dragHandler
 
@@ -37,6 +68,8 @@ MapQuickItem {
 
         onGrabChanged: function (transition, point) {
             if (transition === PointerDevice.UngrabPassive) {
+                geocodeModel.query = marker.coordinate;
+                geocodeModel.update();
                 markerText.visible = true;
             }
             if (transition === PointerDevice.GrabPassive) {

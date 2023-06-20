@@ -18,6 +18,7 @@ Item {
         id: mapPlugin
 
         name: "osm"
+        locales: "en_US"
 
         PluginParameter {
             name: "osm.useragent"
@@ -28,19 +29,16 @@ Item {
             value: "http://maps-redirect.qt.io/osm/"
         }
     }
+
     Map {
         id: map
 
         property geoCoordinate startCentroid
 
         anchors.fill: parent
-        center: QtPositioning.coordinate(62, 25)
+        center: QtPositioning.coordinate(65, 25)
         plugin: mapPlugin
         zoomLevel: 6
-
-        Component.onCompleted: {
-
-        }
 
         PinchHandler {
             id: pinch

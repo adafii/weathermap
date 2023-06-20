@@ -5,7 +5,7 @@ import QtQuick.Layouts
 ApplicationWindow {
     id: window
 
-    title: "Main window"
+    title: "Map view"
     visible: true
 
     MapView {
