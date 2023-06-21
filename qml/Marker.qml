@@ -1,5 +1,6 @@
 import QtLocation
 import QtQuick
+import App
 
 MapQuickItem {
     id: marker
@@ -13,11 +14,33 @@ MapQuickItem {
         height: markerImage.height
         width: markerImage.width
 
-        Text {
-            id: markerText
+        Rectangle {
+            id: info
+
+            property var margin: 10
 
             anchors.left: markerImage.right
-            text: ""
+            anchors.verticalCenter: markerImage.verticalCenter
+            color: "#aaefefef"
+            height: weatherText.height + locationText.height + margin
+            radius: 5
+            width: locationText.width > weatherText.width ? locationText.width + margin : weatherText.width + margin
+
+            Text {
+                id: locationText
+
+                anchors.left: info.left
+                anchors.margins: 5
+                anchors.top: info.top
+                text: ""
+            }
+            Text {
+                id: weatherText
+
+                anchors.left: locationText.left
+                anchors.top: locationText.bottom
+                text: weather.temperature
+            }
         }
         Image {
             id: markerImage
@@ -30,6 +53,13 @@ MapQuickItem {
         }
     }
 
+    Weather {
+        id: weather
+
+        Component.onCompleted: {
+            setCoordinate(marker.coordinate.latitude, marker.coordinate.longitude);
+        }
+    }
     GeocodeModel {
         id: geocodeModel
 
@@ -43,20 +73,23 @@ MapQuickItem {
         onStatusChanged: {
             switch (status) {
             case GeocodeModel.Ready:
+                if (count === 0) {
+                    break;
+                }
                 const address = get(0).address;
                 if (address.city) {
-                    markerText.text = address.city + ', ' + address.country;
+                    locationText.text = address.city + ', ' + address.country;
                 } else if (address.country) {
-                    markerText.text = address.country;
+                    locationText.text = address.country;
                 } else {
-                    markerText.text = "Unknown";
+                    locationText.text = "NA";
                 }
                 break;
             case GeocodeModel.Loading:
-                markerText.text = "Fetching";
+                locationText.text = "";
                 break;
             default:
-                markerText.text = "Unknown";
+                markerText.text = "";
             }
         }
     }
@@ -70,10 +103,10 @@ MapQuickItem {
             if (transition === PointerDevice.UngrabPassive) {
                 geocodeModel.query = marker.coordinate;
                 geocodeModel.update();
-                markerText.visible = true;
+                info.visible = true;
             }
             if (transition === PointerDevice.GrabPassive) {
-                markerText.visible = false;
+                info.visible = false;
             }
         }
     }
