@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.18)
 project("Weathermap" LANGUAGES CXX)
 
-find_package(Qt6 COMPONENTS Gui Quick Qml QuickControls2 Svg Positioning REQUIRED)
+find_package(Qt6 COMPONENTS Gui Quick Qml QuickControls2 Svg Positioning Network REQUIRED)
 qt_standard_project_setup(REQUIRES 6.5)
 
 set(source_dir src)
@@ -41,6 +41,7 @@ target_link_libraries(${main_target} PRIVATE
         Qt6::QuickControls2
         Qt6::Svg
         Qt6::Positioning
+        Qt6::Network
         )
 
 target_compile_features(${main_target} PRIVATE cxx_std_20)

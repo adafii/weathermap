@@ -14,34 +14,31 @@ MapQuickItem {
         height: markerImage.height
         width: markerImage.width
 
-        Rectangle {
+        Item {
             id: info
+            anchors {
+                left: markerImage.right
+                top: markerImage.top
+            }
 
-            property var margin: 10
-
-            anchors.left: markerImage.right
-            anchors.verticalCenter: markerImage.verticalCenter
-            color: "#aaefefef"
-            height: weatherText.height + locationText.height + margin
-            radius: 5
-            width: locationText.width > weatherText.width ? locationText.width + margin : weatherText.width + margin
+            height: locationText.height + weatherText.height;
 
             Text {
                 id: locationText
 
                 anchors.left: info.left
-                anchors.margins: 5
                 anchors.top: info.top
-                text: ""
+                text: {}
             }
             Text {
                 id: weatherText
 
                 anchors.left: locationText.left
-                anchors.top: locationText.bottom
-                text: weather.temperature
+                anchors.top: locationText.text !== "" ? locationText.bottom : info.top
+                text: weather.isValid ? weather.temperature + " °C" : ""
             }
         }
+
         Image {
             id: markerImage
 
@@ -82,7 +79,7 @@ MapQuickItem {
                 } else if (address.country) {
                     locationText.text = address.country;
                 } else {
-                    locationText.text = "NA";
+                    locationText.text = "";
                 }
                 break;
             case GeocodeModel.Loading:
@@ -101,6 +98,7 @@ MapQuickItem {
 
         onGrabChanged: function (transition, point) {
             if (transition === PointerDevice.UngrabPassive) {
+                weather.setCoordinate(marker.coordinate.latitude, marker.coordinate.longitude);
                 geocodeModel.query = marker.coordinate;
                 geocodeModel.update();
                 info.visible = true;
