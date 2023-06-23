@@ -63,16 +63,22 @@ void Weather::requestComplete(QNetworkReply* reply) {
     }
 
     temperature_ = temperature.toDouble();
+    icon_ = symbol.toString();
     isValid_ = true;
 
     emit isValidChanged();
     emit temperatureChanged();
+    emit iconChanged();
 
     timer_.start();
 }
 
 double Weather::temperature() const {
     return temperature_;
+}
+
+QString Weather::icon() const {
+    return icon_;
 }
 
 void Weather::setCoordinate(double latitude, double longitude) {
@@ -85,3 +91,4 @@ void Weather::setCoordinate(double latitude, double longitude) {
 bool Weather::isValid() const {
     return isValid_;
 }
+

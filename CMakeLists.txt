@@ -3,6 +3,7 @@ project("Weathermap" LANGUAGES CXX)
 
 find_package(Qt6 COMPONENTS Gui Quick Qml QuickControls2 Svg Positioning Network REQUIRED)
 qt_standard_project_setup(REQUIRES 6.5)
+set(CMAKE_AUTORCC ON)
 
 set(source_dir src)
 set(qml_dir qml)
@@ -14,6 +15,7 @@ set(main_src ${source_dir}/main.cpp)
 qt_add_executable(${main_target}
         ${main_src}
         ${source_dir}/Weather.cpp
+        images.qrc
         )
 
 qt_add_qml_module(${main_target}
@@ -25,11 +27,6 @@ qt_add_qml_module(${main_target}
             "qml/Marker.qml"
         SOURCES
             ${source_dir}/Weather.cpp ${source_dir}/Weather.h
-        )
-
-qt_add_resources(${main_target} "app_images"
-        PREFIX "/"
-        FILES images/marker.svg
         )
 
 target_include_directories(${main_target} PRIVATE ${source_dir})

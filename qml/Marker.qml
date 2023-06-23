@@ -23,11 +23,21 @@ MapQuickItem {
 
             height: locationText.height + weatherText.height;
 
-            Text {
-                id: locationText
+            Image {
+                id: weatherIcon
 
                 anchors.left: info.left
                 anchors.top: info.top
+                height: 30
+                width: 30
+                source: weather.isValid ? "/images/icons/" + weather.icon + ".png" : ""
+            }
+
+            Text {
+                id: locationText
+
+                anchors.left: weatherIcon.right
+                anchors.top: weatherIcon.top
                 text: {}
             }
             Text {
@@ -43,7 +53,7 @@ MapQuickItem {
             id: markerImage
 
             height: 30
-            source: "qrc:images/marker.svg"
+            source: "/images/marker.svg"
             sourceSize.height: 30
             sourceSize.width: 30
             width: 30
@@ -86,7 +96,7 @@ MapQuickItem {
                 locationText.text = "";
                 break;
             default:
-                markerText.text = "";
+                locationText.text = "";
             }
         }
     }

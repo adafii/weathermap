@@ -18,6 +18,7 @@ const auto UPDATE_DELAY = 60 * 60 * 1000;  // ms
 class Weather : public QObject {
     Q_OBJECT
     Q_PROPERTY(double temperature READ temperature NOTIFY temperatureChanged)
+    Q_PROPERTY(QString icon READ icon NOTIFY iconChanged)
     Q_PROPERTY(bool isValid READ isValid NOTIFY isValidChanged)
     QML_ELEMENT
 
@@ -26,11 +27,13 @@ public:
     explicit Weather(QObject* parent);
 
     double temperature() const;
+    QString icon() const;
     bool isValid() const;
     Q_INVOKABLE void setCoordinate(double latitude, double longitude);
 
 signals:
     void temperatureChanged();
+    void iconChanged();
     void isValidChanged();
 
 private slots:
@@ -39,6 +42,7 @@ private slots:
 
 private:
     double temperature_{0};
+    QString icon_{};
     bool isValid_{false};
     QGeoCoordinate coordinate_{};
     QNetworkAccessManager networkManager_{};
