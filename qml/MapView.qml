@@ -17,19 +17,18 @@ Item {
     Plugin {
         id: mapPlugin
 
-        name: "osm"
         locales: "en_US"
+        name: "osm"
 
         PluginParameter {
             name: "osm.useragent"
-            value: "test"
+            value: "weathermap/0.1 github.com/adafii/weathermap"
         }
         PluginParameter {
             name: "osm.mapping.providersrepository.address"
             value: "http://maps-redirect.qt.io/osm/"
         }
     }
-
     Map {
         id: map
 
@@ -37,6 +36,7 @@ Item {
 
         anchors.fill: parent
         center: QtPositioning.coordinate(65, 25)
+        copyrightsVisible: false
         plugin: mapPlugin
         zoomLevel: 6
 
@@ -80,6 +80,16 @@ Item {
             onTapped: {
                 createMarker(map, map.toCoordinate(tap.point.position));
             }
+        }
+    }
+    Text {
+        text: 'Map data from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>. Weather data from <a href="https://api.met.no/doc/License">MET Norway</a>.'
+        font.family: "Monospace"
+        onLinkActivated: Qt.openUrlExternally(link)
+
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
         }
     }
 }
